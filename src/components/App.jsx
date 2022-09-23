@@ -36,23 +36,18 @@ export default class App extends Component {
   }
 
 
-  addContact = ({name, number}) => {
-      const normalizedName = name.toString().toLowerCase();
+  addContact = ({ name, number }) => {
+    const normalizedName = name.toString().toLowerCase();
 
-      const modelId = nanoid();
-      
-      let inContacts = false;
+    const modelId = nanoid();
 
-    this.state.contacts.forEach(contact => {
-      if (contact.name.toString().toLowerCase() === normalizedName) {
-        alert(`${name} is already in contacts`);
-        inContacts = true;
-      }
-    });
+    const inContacts = this.state.contacts.find(contact => contact.name.toLowerCase() === normalizedName);
 
     if (inContacts) {
+      alert(`${name} is already in contacts`);
       return;
     }
+      
 
     const contact = {
       name,
@@ -64,23 +59,28 @@ export default class App extends Component {
       { contacts: [contact, ...prevState.contacts], }));
   }
 
-  deleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.find(contact => contact.id !== contactId),
-    }));
-  };
+
+
+
+  
 
   changeFilter = e => {
     this.setState({ filter: e.currentTarget.value });
   };
   
   getVisibleContacts = () => {
-    const { filter} = this.state;
+    const {contacts, filter} = this.state;
     const normalizedFilter = filter.toLowerCase();
 
-    return this.state.contacts.filter(contact =>
+    return contacts.filter(contact =>
       contact.name.toString().toLowerCase().includes(normalizedFilter),
     );
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
   };
 
     
